@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+	<title>Carousel test</title>
+	<link rel="stylesheet" type="text/css" href="../build/build.css">
+</head>
+<body>
+	<div id="simple-banner">
+		<div>Hello</div>
+		<div>World!</div>
+		<div>You can slide anything you like</div>
+		<div>in almost any html container</div>
+		<div>and transition it as you want</div>
+		<div>by defining only html and css.</div>
+	</div>
+	<style type="text/css">
+		/* apply transitions */
+		.carousel-show, .carousel-prev {
+	    	transition: .4s all ease;
+    		-webkit-transition: 2s all ease;
+    		-moz-transition: 2s all ease;
+    		-o-transition: 2s all ease;
+    	}
+
+		/* next slide from left */
+		.carousel-next {
+    		left: -100%;
+		}
+
+		/* previous slide to right */
+		.carousel-prev {
+    		left: 100%;
+		}	
+
+	</style>
+	<script src="../build/build.js"></script>
+	<script>
+		var carousel = require('carousel');
+		
+		new carousel('simple-banner').start(0,3000);
+
+	</script>
+</body>
+</html>

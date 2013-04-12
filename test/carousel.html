@@ -4,7 +4,7 @@
 	<title>Carousel test</title>
 </head>
 <body>
-	<div id="banner">
+	<div id="carousel">
 		<div>Hello</div>
 		<div>World!</div>
 		<div>You can slide anything you like</div>
@@ -67,7 +67,9 @@
 	<script>
 		var carousel = require('carousel');
 		
-		new carousel('banner').start(0,3000);
+		/* container carousel with classname banner */
+		/* start at index 0, update 3000ms interval */
+		new carousel('carousel','banner','div').start(0,3000);
 
 	</script>
 </body>

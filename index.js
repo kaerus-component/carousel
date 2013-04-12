@@ -3,20 +3,27 @@ var Emitter = require('emitter'),
     DEFAULT_INTERVAL = 4000;
 
 
-function Carousel(container,tag) {
+function Carousel(container,classname,tag) {
 
-    if(container) this.target(container);
-    else this.target('carousel');
+    classname = classname ? classname : 'carousel';
+
+    if(typeof container === 'string')
+        container = document.getElementById(container);
+
+    if(!container) throw new Error("invalid carousel container");
+
+    /* add class to container */
+    if(container.className) container.className+= ' ' + classname;
+    else container.className = classname;
 
     if(tag) tag = tag.toUpperCase();
 
-    var childs = this.elem.childNodes,
-        nodes = [];
+    var childs = container.childNodes, nodes = [];
 
     /* get child nodes from parent container */
     for(var i = 0, l = childs.length; i < l; i++){
         if(childs[i].nodeType === 1 && (!tag || childs[i].nodeName === tag)){ 
-            addTransition(childs[i],this.className);
+            addTransition(childs[i],classname);
             nodes.push(childs[i]);
         }    
     }
@@ -24,8 +31,8 @@ function Carousel(container,tag) {
     /* clone nodes if we have less than three childs */
     for(var i = 0; nodes.length < 3; i++){
         nodes[nodes.length] = nodes[i].cloneNode(true);
-        this.elem.appendChild(nodes[nodes.length-1]);
-        addTransition(nodes[nodes.length-1],this.className);
+        container.appendChild(nodes[nodes.length-1]);
+        addTransition(nodes[nodes.length-1],classname);
     }
 
     /* cap the index */
@@ -66,25 +73,6 @@ function addTransition(elem,cn){
         this.className = type ? cn + '-item ' + cn + '-' + type : cn + '-item';
     });
 }
-
-Carousel.prototype.target = function(elem){
-    if(typeof elem === 'string')
-        this.elem = document.getElementById(elem);
-    else this.elem = elem;
-
-    if(!this.elem) throw new Error("Carousel initiallized with invalid container");
-    
-    elem = this.elem;
-
-    /* we use the id as classname for items */
-    this.className = elem.id;
-
-    /* add class to container */
-    if(elem.className) elem.className+= ' ' + this.className;
-    else elem.className = this.className;
-
-    return this;
-}; 
 
 Carousel.prototype.next = function(){
     if(this.transits['prev'])

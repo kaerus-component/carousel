@@ -12,7 +12,7 @@ Usage
 	<title>Carousel test</title>
 </head>
 <body>
-	<div id="banner">
+	<div id="carousel">
 		<div>Hello</div>
 		<div>World!</div>
 		<div>You can slide anything you like</div>
@@ -75,7 +75,7 @@ Usage
 	<script>
 		var carousel = require('carousel');
 		
-		new carousel('banner').start(0,3000);
+		new carousel('carousel','banner').start(0,3000);
 
 	</script>
 </body>

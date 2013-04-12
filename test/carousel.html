@@ -2,10 +2,9 @@
 <html>
 <head>
 	<title>Carousel test</title>
-	<link rel="stylesheet" type="text/css" href="../build/build.css">
 </head>
 <body>
-	<div id="simple-banner">
+	<div id="banner">
 		<div>Hello</div>
 		<div>World!</div>
 		<div>You can slide anything you like</div>
@@ -14,8 +13,39 @@
 		<div>by defining only html and css.</div>
 	</div>
 	<style type="text/css">
-		/* apply transitions */
-		.carousel-show, .carousel-prev {
+		/* style the banner slide */
+		.banner {
+		    position: relative;
+		    overflow: hidden;
+		    padding: 0;
+		    margin: 0;
+		}
+
+		.banner-item {
+		    position: relative;
+		    display: none;
+		    width: 100%;
+		    height: 100%;
+		    top: 0;
+		    left: 0;
+		    list-style-type: none;
+		    padding: 0;
+		    margin: 0;
+		}  
+
+		.banner-show,
+		.banner-next,
+		.banner-prev {
+		    display: block;
+		}
+
+		.banner-next,
+		.banner-prev {
+		    position: absolute;
+		}
+
+		/* add transitions */
+		.banner-show, .banner-prev {
 	    	transition: .4s all ease;
     		-webkit-transition: 2s all ease;
     		-moz-transition: 2s all ease;
@@ -23,12 +53,12 @@
     	}
 
 		/* next slide from left */
-		.carousel-next {
+		.banner-next {
     		left: -100%;
 		}
 
 		/* previous slide to right */
-		.carousel-prev {
+		.banner-prev {
     		left: 100%;
 		}	
 
@@ -37,7 +67,7 @@
 	<script>
 		var carousel = require('carousel');
 		
-		new carousel('simple-banner').start(0,3000);
+		new carousel('banner').start(0,3000);
 
 	</script>
 </body>

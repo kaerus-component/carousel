@@ -1,14 +1,12 @@
 var Emitter = require('emitter'),
     TRANSITIONS = ['prev','show','next'],
-    DEFAULT_INTERVAL = 4000,
-    CONTAINER_ID = 'carousel', 
-    CLASS_NAME = 'carousel';
+    DEFAULT_INTERVAL = 4000;
 
 
 function Carousel(container,tag) {
 
     if(container) this.target(container);
-    else this.target(CONTAINER_ID);
+    else this.target('carousel');
 
     if(tag) tag = tag.toUpperCase();
 
@@ -18,7 +16,7 @@ function Carousel(container,tag) {
     /* get child nodes from parent container */
     for(var i = 0, l = childs.length; i < l; i++){
         if(childs[i].nodeType === 1 && (!tag || childs[i].nodeName === tag)){ 
-            addTransitionListener(childs[i]);
+            addTransition(childs[i],this.className);
             nodes.push(childs[i]);
         }    
     }
@@ -27,7 +25,7 @@ function Carousel(container,tag) {
     for(var i = 0; nodes.length < 3; i++){
         nodes[nodes.length] = nodes[i].cloneNode(true);
         this.elem.appendChild(nodes[nodes.length-1]);
-        addTransitionListener(nodes[nodes.length-1]);
+        addTransition(nodes[nodes.length-1],this.className);
     }
 
     /* cap the index */
@@ -61,11 +59,11 @@ function Carousel(container,tag) {
     })
 }
 
-function addTransitionListener(elem){
-    var cn = elem.className = CLASS_NAME + '-item';
+function addTransition(elem,cn){
+    elem.className = cn + '-item';
 
     Emitter(elem).on('transition',function(type){
-        this.className = type ? cn + ' ' + CLASS_NAME + '-' + type : cn;
+        this.className = type ? cn + '-item ' + cn + '-' + type : cn + '-item';
     });
 }
 
@@ -78,9 +76,12 @@ Carousel.prototype.target = function(elem){
     
     elem = this.elem;
 
+    /* we use the id as classname for items */
+    this.className = elem.id;
+
     /* add class to container */
-    if(elem.className) elem.className+= ' ' + CLASS_NAME;
-    else elem.className = CLASS_NAME;
+    if(elem.className) elem.className+= ' ' + this.className;
+    else elem.className = this.className;
 
     return this;
 }; 

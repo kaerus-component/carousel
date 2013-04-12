@@ -6,9 +6,6 @@
   "scripts": [
     "index.js"
   ],
-  "styles": [
-    "stylesheet.css"
-  ],
   "dependencies": {
     "kaerus-component/emitter": "*"
   }

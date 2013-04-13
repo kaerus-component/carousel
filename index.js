@@ -92,7 +92,8 @@ Carousel.prototype.show = function(index){
     index = isNaN(index) ? this.index : index;
     
     Object.keys(this.transits).forEach(function(type){
-        setClass(this.transits[type],null);
+        if(this.transits[type])
+            setClass(this.transits[type],null);
     });
 
     this.index = index;

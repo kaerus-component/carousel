@@ -96,16 +96,18 @@ Carousel.prototype.show = function(index){
     return this;
 };
 
-Carousel.prototype.setInterval = function(interval){
+Carousel.prototype.setInterval = function(interval){ 
     var self = this;
 
-    interval = isNaN(interval) ? 5000 : interval;
+    interval = isNaN(interval) ? (this.interval || 4000): interval;
 
     this.interval = interval;
 
-    this._timer = setInterval(function(){
-        self.next();
-    },this.interval);
+    this.stop();
+
+    function carousel(){self.next()}
+
+    this._timer = setInterval(carousel,interval);
 
     return this;
 }

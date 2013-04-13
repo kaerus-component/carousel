@@ -1,20 +1,15 @@
-var Emitter = require('emitter'),
-    TRANSITIONS = ['prev','show','next'],
+var TRANSITIONS = ['prev','show','next'],
     DEFAULT_INTERVAL = 4000;
 
 
 function Carousel(container,classname,tag) {
-
-    classname = classname ? classname : 'carousel';
 
     if(typeof container === 'string')
         container = document.getElementById(container);
 
     if(!container) throw new Error("invalid carousel container");
 
-    /* add class to container */
-    if(container.className) container.className+= ' ' + classname;
-    else container.className = classname;
+    classname = classname ? classname : 'carousel';
 
     if(tag) tag = tag.toUpperCase();
 
@@ -23,7 +18,7 @@ function Carousel(container,classname,tag) {
     /* get child nodes from parent container */
     for(var i = 0, l = childs.length; i < l; i++){
         if(childs[i].nodeType === 1 && (!tag || childs[i].nodeName === tag)){ 
-            addTransition(childs[i],classname);
+            childs[i].className = classname;
             nodes.push(childs[i]);
         }    
     }
@@ -32,7 +27,7 @@ function Carousel(container,classname,tag) {
     for(var i = 0; nodes.length < 3; i++){
         nodes[nodes.length] = nodes[i].cloneNode(true);
         container.appendChild(nodes[nodes.length-1]);
-        addTransition(nodes[nodes.length-1],classname);
+        nodes[nodes.length-1].className = classname;
     }
 
     /* cap the index */
@@ -43,7 +38,7 @@ function Carousel(container,classname,tag) {
         return value;
     }
 
-    /* item index */
+    /* node index */
     var index = 0;
 
     /* nodes in transit */
@@ -66,17 +61,12 @@ function Carousel(container,classname,tag) {
     })
 }
 
-function addTransition(elem,cn){
-    elem.className = cn + '-item';
-
-    Emitter(elem).on('transition',function(type){
-        this.className = type ? cn + '-item ' + cn + '-' + type : cn + '-item';
-    });
-}
 
 Carousel.prototype.next = function(){
-    if(this.transits['prev'])
-        this.transits['prev'].emit('transition',null);
+    var node;
+
+    if((node = this.transits['prev']))
+        node.className = node.className.split(' ')[0];
 
     this.index++;
 
@@ -86,9 +76,13 @@ Carousel.prototype.next = function(){
 }
 
 function transition(transits){
+    var node, classname; 
+
     TRANSITIONS.forEach(function(type){
-        if(transits[type])
-            transits[type].emit('transition',type);
+        if((node = transits[type])) {
+            classname = node.className.split(' ')[0];
+            node.className = classname + ' ' + classname + '-' + type;
+        }
     })     
 }
 

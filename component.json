@@ -1,12 +1,9 @@
 {
   "name": "carousel",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Carousel",
   "repo": "kaerus-component/carousel",
   "scripts": [
     "index.js"
-  ],
-  "dependencies": {
-    "kaerus-component/emitter": "*"
-  }
+  ]
 }

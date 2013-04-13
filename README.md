@@ -22,14 +22,14 @@ Usage
 	</div>
 	<style type="text/css">
 		/* style the banner slide */
-		.banner {
+		#banner {
 		    position: relative;
 		    overflow: hidden;
 		    padding: 0;
 		    margin: 0;
 		}
 
-		.banner-item {
+		.banner {
 		    position: relative;
 		    display: none;
 		    width: 100%;
@@ -75,9 +75,11 @@ Usage
 	<script>
 		var carousel = require('carousel');
 		
-		new carousel('carousel','banner').start(0,3000);
+		var container = document.getElementById('banner');
+		new carousel(container,'banner').start();
 
 	</script>
 </body>
 </html>
 ```
+

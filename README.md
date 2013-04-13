@@ -1,7 +1,10 @@
 carousel
 ========
 
-Simple carousel
+Simple carousel that toggles 'prev', 'show', 'next' classes on the carousel items.
+It should not matter what type of html container is used as long as it contains some child elements.
+If you have less than three elements the carousel creates clones from the existing nodes.
+You define the style and transitioning effect on the parent container and the child elements 'prev','show','next' classes.
 
 Usage
 =====

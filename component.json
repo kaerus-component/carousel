@@ -5,5 +5,6 @@
   "repo": "kaerus-component/carousel",
   "scripts": [
     "index.js"
-  ]
+  ],
+  "license": "Apache2_0"
 }

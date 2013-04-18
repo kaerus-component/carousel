@@ -12,25 +12,25 @@ function Carousel(container,tag) {
 
     var childs = container.childNodes;
 
-    this.nodes = [];
+    var nodes = this.nodes = [];
 
     /* get child nodes from parent container */
     for(var i = 0, l = childs.length; i < l; i++){
         if(childs[i].nodeType === 1 && (!tag || childs[i].nodeName === tag)){ 
-            this.nodes.push(childs[i]);
+            nodes.push(childs[i]);
         }    
     }
 
     /* clone nodes if we have less than three childs */
-    for(var i = 0; this.nodes.length < 3; i++){
-        this.nodes[this.nodes.length] = this.nodes[i].cloneNode(true);
-        container.appendChild(this.nodes[this.nodes.length-1]);
+    for(var i = 0; nodes.length < 3; i++){
+        nodes[nodes.length] = nodes[i].cloneNode(true);
+        container.appendChild(nodes[nodes.length-1]);
     }
 
     /* cap the index */
     function cap(value){
-        value = value % this.nodes.length;
-        if(value < 0) value = this.nodes.length + value;
+        value = value % nodes.length;
+        if(value < 0) value = nodes.length + value;
 
         return value;
     }
@@ -48,10 +48,10 @@ function Carousel(container,tag) {
             return index;
         },
         set: function(value){
-            this.transits[PREV] = this.nodes[index];       
+            this.transits[PREV] = nodes[index];       
             index = cap(value);
-            this.transits[SHOW] = this.nodes[index];
-            this.transits[NEXT] = this.nodes[cap(index+1)];
+            this.transits[SHOW] = nodes[index];
+            this.transits[NEXT] = nodes[cap(index+1)];
 
             return index;
         }

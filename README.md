@@ -32,7 +32,7 @@ Usage
 		    margin: 0;
 		}
 
-		#banner div {
+		#banner div.slide {
 		    position: relative;
 		    display: none;
 		    width: 100%;

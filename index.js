@@ -1,5 +1,5 @@
-var PREV = 'prev', SHOW = 'show', NEXT = 'next', 
-    TRANSIT = [PREV, SHOW, NEXT];
+// CAROUSEL ////////////////////////////////////////////////////////
+var ACTIVE_SLIDE = 'show', NEXT_SLIDE = 'next', PREVIOUS_SLIDE = 'prev';
 
 function Carousel(container,tag) {
 
@@ -27,6 +27,11 @@ function Carousel(container,tag) {
         container.appendChild(nodes[nodes.length-1]);
     }
 
+    /* add slide class to every element */
+    nodes.forEach(function(node){
+        addClass(node,'slide');
+    });
+
     /* cap the index */
     function cap(value){
         value = value % nodes.length;
@@ -38,99 +43,135 @@ function Carousel(container,tag) {
     /* node index */
     var index = 0;
 
-    /* nodes in transit */
-    this.transits = {};
-
     /* manages index updates */
     Object.defineProperty(this,'index',{
         enumerable:false,
         get: function(){
-            return index;
+            return cap(index);
         },
-        set: function(value){
-            this.transits[PREV] = nodes[index];       
+        set: function(value){    
+
             index = cap(value);
-            this.transits[SHOW] = nodes[index];
-            this.transits[NEXT] = nodes[cap(index+1)];
+
+            nodes.forEach(function(node){
+                clearClass(node,[ACTIVE_SLIDE,NEXT_SLIDE,PREVIOUS_SLIDE]);
+            });
+ 
+            addClass(nodes[cap(index-1)], PREVIOUS_SLIDE);
+            addClass(nodes[index], ACTIVE_SLIDE);
+            addClass(nodes[cap(index+1)], NEXT_SLIDE);
 
             return index;
         }
     })
 }
 
+function addClass(node,type){
+    
+    if(typeof type === 'string') type = [type];
+
+    node.className = node.className
+                            .split(' ').filter(function(f){ return f ? type.indexOf(f) < 0 : false })
+                            .concat(type).join(' ');
+}
+
+function clearClass(node,type){
+
+    if(typeof type === 'string') type = [type];
+
+    node.className = node.className
+                            .split(' ')
+                            .filter(function(f){ return type.indexOf(f) < 0 })
+                            .reduce(function(a,b){
+                                return a ? + (b ? ' ' + b : '') : b||'';
+                            },'');
+}
 
 Carousel.prototype.next = function(){
    
-    /* clears previous */
-    if(this.transits[PREV])
-        setClass(this.transits[PREV],null);
-
-    this.index++;
-
-    this.transition();
+    this.index = this.onNext(this.index);  
+    this.setNextInterval();
 
     return this;
 }
 
-function setClass(node,type){
-    var classnames;
+Carousel.prototype.prev = function(){
 
-    classnames = node.className.split(' ').filter(function(f){return TRANSIT.indexOf(f) < 0});
-    if(type) classnames[classnames.length] = type;
-    node.className = classnames.join(' ');
+    this.index = this.onPrev(this.index);
+    this.setNextInterval();
+
+    return this;
 }
 
-Carousel.prototype.transition = function(){
-    for(var i = 0; i < 3; i++){
-        if((node = this.transits[TRANSIT[i]])) {
-            setClass(node,TRANSIT[i]);
-        }
+Carousel.prototype.onNext = function(index){
+    return ++index;
+}
+
+Carousel.prototype.onPrev = function(index){
+    return --index;
+}
+
+Carousel.prototype.setNextInterval = function(interval){ 
+    var self = this; 
+
+    this.interval = isNaN(interval) ? (this.interval||4000): interval;
+
+    if(!this.transit){
+        this.startTime = new Date();
+
+        this.transit = setTimeout(function(){
+            self.transit = null;
+            self.next();
+        },this.interval);
     }    
+
+    return this;
 }
 
 Carousel.prototype.show = function(index){
     index = isNaN(index) ? this.index : index;
     
-    Object.keys(this.transits).forEach(function(type){
-        if(this.transits[type])
-            setClass(this.transits[type],null);
-    });
-
-    this.index = index;
-
-    this.transition();
+    this.index = index; 
 
     return this;
 };
 
-Carousel.prototype.setInterval = function(interval){ 
-    var self = this;
-
-    interval = isNaN(interval) ? (this.interval || 4000): interval;
-
-    this.interval = interval;
-
-    this.stop();
-
-    function carousel(){self.next()}
-
-    this._timer = setInterval(carousel,interval);
-
-    return this;
-}
-
 Carousel.prototype.start = function(index,interval){  
-    this.show(index);    
-    this.setInterval(interval);
+    
+    this.show(index);
+    
+    this.setNextInterval(interval);
 
     return this;
 };
 
 Carousel.prototype.stop = function(){
-    if(this._timer){
-        clearInterval(this._timer);
-        delete this._timer;
+
+    this.startTime = null;
+
+    if(this.transit){
+        clearTimeout(this.transit);
+        delete this.transit;
     }    
+
+    return this;
+}
+
+Carousel.prototype.pause = function(){
+
+    if(this.startTime) 
+        this.pauseInterval = new Date() - this.startTime;
+
+    this.stop();
+
+    return this;
+}
+
+Carousel.prototype.resume = function(){
+
+    this.setNextInterval(this.pauseInterval);
+
+    return this;
 }
 
 module.exports = Carousel;

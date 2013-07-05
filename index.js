@@ -168,8 +168,11 @@ Carousel.prototype.pause = function(){
 }
 
 Carousel.prototype.resume = function(){
+    var interval = this.interval;
 
     this.setNextInterval(this.pauseInterval);
+
+    this.interval = interval;
 
     return this;
 }

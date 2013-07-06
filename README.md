@@ -21,7 +21,7 @@ new carousel('slideshow').start(0,5000);
 
 Demo
 ====
-<a href="kaerus.com/!#developments#carousel">Live demo at Kaerus.com</a>
+<a href="http://kaerus.com/!#developments#carousel">Live demo at Kaerus.com</a>
 
 License
 =======

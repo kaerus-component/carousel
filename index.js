@@ -198,11 +198,11 @@ Carousel.prototype.pause = function(skipPauseInterval){
     return this;
 }
 
-Carousel.prototype.resume = function(ignorePausedInterval){
+Carousel.prototype.resume = function(skipPauseInterval){
     
     this.paused = false;
 
-    if(ignorePausedInterval || !this.pausesInterval) {
+    if(skipPauseInterval || !this.pausesInterval) {
         this.nextInterval();
     } else {
         var interval = this.interval;

@@ -1,5 +1,6 @@
 // CAROUSEL ////////////////////////////////////////////////////////
-var ACTIVE_SLIDE = 'show', NEXT_SLIDE = 'next', PREVIOUS_SLIDE = 'prev';
+/* element class mappings */
+var CAROUSEL_SLIDE = 'slide', ACTIVE_SLIDE = 'show', NEXT_SLIDE = 'next', PREVIOUS_SLIDE = 'prev';
 
 function Carousel(container,tag) {
 
@@ -29,8 +30,8 @@ function Carousel(container,tag) {
         container.appendChild(nodes[nodes.length-1]);
     }
 
-    /* add slide class to every element */
-    addClass(nodes,'slide');
+    /* adds slide class to every element */
+    addClass(nodes,CAROUSEL_SLIDE);
 
     var index, carousel = this;
 
@@ -96,13 +97,17 @@ function clearClass(node,type){
 }
 
 Carousel.prototype.next = function(){
-   
+    
+    this.stop();
+
     this.index++;  
 
     return this;
 }
 
 Carousel.prototype.prev = function(){
+ 
+    this.stop();
 
     this.index--;
 
@@ -120,18 +125,14 @@ Carousel.prototype.transit = function(index,from){
     addClass(this.slides[index], ACTIVE_SLIDE);
     addClass(this.slides[next], NEXT_SLIDE);
 
-    this.nextInterval();
+    if(!this.paused) this.nextInterval();
 
     return this;
 }
 
-Carousel.prototype.nextInterval = function(interval){ 
+Carousel.prototype.nextInterval = function(){ 
     var self = this; 
-
-    this.paused = undefined;
-
-    this.interval = isNaN(interval) ? (this.interval||4000): interval;
-
+    
     if(!this.timer){
         this.startTime = new Date();
 
@@ -144,21 +145,30 @@ Carousel.prototype.nextInterval = function(interval){
     return this;
 }
 
-Carousel.prototype.show = function(index,interval){
+Carousel.prototype.setInterval = function(interval){
+    
+    this.interval = isNaN(interval) ? (this.interval||4000): interval;
+
+    return this;
+}
+
+Carousel.prototype.show = function(index){
     index = isNaN(index) ? this.index : index;
     
     this.stop();
 
     this.index = index; 
 
-    this.nextInterval(interval);
-
     return this;
 };
 
 Carousel.prototype.start = function(index,interval){  
     
-    this.show(index,interval);
+    this.paused = undefined;
+
+    this.setInterval(interval);
+
+    this.show(index);
     
     return this;
 };
@@ -169,30 +179,41 @@ Carousel.prototype.stop = function(){
 
     if(this.timer){
         clearTimeout(this.timer);
-        delete this.timer;
+        this.timer = null;
     }    
 
     return this;
 }
 
-Carousel.prototype.pause = function(){
+Carousel.prototype.pause = function(skipPauseInterval){
 
     this.paused = true;
 
-    if(this.startTime) 
+    if(this.startTime && !skipPauseInterval) {
         this.pauseInterval = new Date() - this.startTime;
+    }
 
     this.stop();
 
     return this;
 }
 
-Carousel.prototype.resume = function(){
-    var interval = this.interval;
+Carousel.prototype.resume = function(ignorePausedInterval){
+    
+    this.paused = false;
 
-    this.nextInterval(this.pauseInterval);
+    if(ignorePausedInterval || !this.pausesInterval) {
+        this.nextInterval();
+    } else {
+        var interval = this.interval;
 
-    this.interval = interval;
+        /* resume from paused interval */
+        this.setInterval(this.pauseInterval).nextInterval();
+
+        this.interval = interval;
+    }
+
+    this.pauseInterval = null;
 
     return this;
 }

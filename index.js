@@ -65,8 +65,7 @@ function cap(max,value){
     return value;
 }
 
-function addClass(node,type){
-    
+function addClass(node,type){  
     if(typeof type === 'string') type = [type];
 
     if(Array.isArray(node)){
@@ -74,7 +73,7 @@ function addClass(node,type){
             addClass(node[i],type);
     } else {
         node.className = node.className
-                            .split(' ').filter(function(f){ return f ? type.indexOf(f) < 0 : false })
+                            .split(' ').filter(function(f){ return type.indexOf(f) < 0 })
                             .concat(type).join(' ');
     }                        
 }
@@ -91,7 +90,7 @@ function clearClass(node,type){
                             .split(' ')
                             .filter(function(f){ return type.indexOf(f) < 0 })
                             .reduce(function(a,b){
-                                return a ? + (b ? ' ' + b : '') : b||'';
+                                return a ? (b ? ' ' + b : '') : b||'';
                             },'');
     }                        
 }

@@ -90,7 +90,7 @@ function clearClass(node,type){
                             .split(' ')
                             .filter(function(f){ return type.indexOf(f) < 0 })
                             .reduce(function(a,b){
-                                return a ? (b ? ' ' + b : '') : b||'';
+                                return a ? a + (b ? ' ' + b : '') : b||'';
                             },'');
     }                        
 }

@@ -24,8 +24,12 @@ function Carousel(container,tag) {
         }    
     }
 
-    /* clone nodes if we have less than three childs */
-    for(var i = 0; nodes.length < 3; i++){
+     /* clone some nodes if we have to few slides */
+    var min_slides = 3;
+
+    if(nodes.length === 2) min_slides = 4;
+    
+    for(var i = 0; nodes.length < min_slides; i++){
         nodes[nodes.length] = nodes[i].cloneNode(true);
         container.appendChild(nodes[nodes.length-1]);
     }

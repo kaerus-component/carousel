@@ -25,9 +25,9 @@ function Carousel(container,tag) {
     }
 
      /* clone some nodes if we have to few slides */
-    var min_slides = 3;
+    var min_slides = 4;
 
-    if(nodes.length === 2) min_slides = 4;
+    if(nodes.length === 3) min_slides = 6;
     
     for(var i = 0; nodes.length < min_slides; i++){
         nodes[nodes.length] = nodes[i].cloneNode(true);
@@ -115,6 +115,13 @@ Carousel.prototype.prev = function(){
     this.index--;
 
     return this;
+}
+
+Carousel.prototype.getSlide = function(offset, pos){
+    var index = pos !== undefined ? offset : this.index,
+        slide = cap(this.slides.length,offset+pos);
+
+    return this.slides[slide];
 }
 
 Carousel.prototype.transit = function(index,from){
